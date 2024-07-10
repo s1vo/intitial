@@ -1,6 +1,7 @@
 import { Component } from '../core/Component';
 import { Form } from './Form';
 import { List } from './List';
+import { ListItem } from './ListItem';
 
 export class App extends Component {
     setup() {
@@ -12,20 +13,17 @@ export class App extends Component {
         this.$rootElement = document.createElement('div');
         this.$rootElement.className = 'app';
 
-        // Заголовок с общей суммой
         const $totalAmount = document.createElement('h1');
         $totalAmount.className = 'total-amount';
         $totalAmount.innerHTML = `Итого: $<span>${this.state.totalAmount}</span>`;
         this.$totalAmount = $totalAmount;
         this.$rootElement.appendChild($totalAmount);
 
-        // Форма доната
         const form = new Form({
             onDonate: this.handleDonate.bind(this),
         });
         this.$rootElement.appendChild(form.$rootElement);
 
-        // Список донатов
         const list = new List({
             donates: this.state.donates,
         });
@@ -35,6 +33,7 @@ export class App extends Component {
 
     handleDonate(amount) {
         const newDonate = {
+            id: this.generateUniqueId(),
             date: new Date().toLocaleString(),
             amount,
         };
@@ -43,6 +42,12 @@ export class App extends Component {
         this.state.totalAmount += amount;
 
         this.$totalAmount.querySelector('span').textContent = this.state.totalAmount;
-        this.$list.update(this.state.donates);
+
+        const item = new ListItem(newDonate);
+        this.$list.addItem(item);
+    }
+
+    generateUniqueId() {
+        return Math.floor(Math.random() * Date.now());
     }
 }

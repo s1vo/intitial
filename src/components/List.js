@@ -12,19 +12,24 @@ export class List extends Component {
     $title.textContent = 'Список донатов';
     this.$rootElement.appendChild($title);
 
-    this.$donatesList = document.createElement('div');
-    this.$donatesList.className = 'donates-container__donates';
-    this.$rootElement.appendChild(this.$donatesList);
+    const $donatesListContainer = document.createElement('div');
+    $donatesListContainer.className = 'donates-container__donates';
+    this.$donatesListContainer = $donatesListContainer;
+    this.$rootElement.appendChild($donatesListContainer);
 
     this.update(this.props.donates);
   }
 
   update(donates) {
-    this.$donatesList.innerHTML = '';
+    this.$donatesListContainer.innerHTML = '';
 
     donates.forEach((donate) => {
       const listItem = new ListItem(donate);
-      this.$donatesList.appendChild(listItem.$rootElement);
+      this.$donatesListContainer.appendChild(listItem.$rootElement);
     });
+  }
+
+  addItem(item) {
+    this.$donatesListContainer.appendChild(item.$rootElement);
   }
 }
